@@ -10,7 +10,6 @@ $(() => {
   observer.observe($rootContainer, {
     attributes: false,
     childList: true,
-    // eslint-disable-next-line spellcheck/spell-checker
     subtree: false,
   });
 
