@@ -1,3 +1,70 @@
-<div class="default-style">
-  <dx-button [text]="buttonText" (onClick)="onClick($event)"></dx-button>
-</div>
+<dx-data-grid [dataSource]="tasks" keyExpr="ID" [showBorders]="true">
+  <dxo-paging [enabled]="true" [pageSize]="15"></dxo-paging>
+  <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+  <dxi-column
+    dataField="AssigneeID"
+    [allowSorting]="false"
+    editCellTemplate="dropDownBoxEditorTemplate"
+  >
+    <dxo-lookup
+      [dataSource]="employees"
+      valueExpr="ID"
+      displayExpr="FullName"
+    ></dxo-lookup>
+    <dxi-validation-rule type="required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="Task"></dxi-column>
+
+  <div *dxTemplate="let cellInfo of 'dropDownBoxEditorTemplate'">
+    <dx-drop-down-box
+      [dropDownOptions]="dropdownOptions"
+      [dataSource]="employees"
+      [value]="cellInfo.value"
+      valueExpr="ID"
+      displayExpr="FullName"
+      contentTemplate="contentTemplate"
+    >
+      <div *dxTemplate="let templateData of 'contentTemplate'">
+        <dx-popup
+          #targetPopup
+          [width]="400"
+          [height]="150"
+          title="Search by state:"
+          [shading]="false"
+          id="popId"
+        >
+          <div *dxTemplate="let data of 'content'">
+            <dx-select-box
+              [items]="states"
+              [searchEnabled]="true"
+              [showClearButton]="true"
+              (onValueChanged)="searchValueChanged($event.value)"
+            ></dx-select-box>
+          </div>
+        </dx-popup>
+
+        <dx-button text="Search" (onClick)="openPopup()"></dx-button>
+        <dx-data-grid
+          #targetDataGrid
+          keyExpr="ID"
+          [dataSource]="employees"
+          [selectedRowKeys]="[cellInfo.value]"
+          [focusedRowEnabled]="true"
+          [focusedRowKey]="cellInfo.value"
+          (onSelectionChanged)="
+            onSelectionChanged(
+              $event.selectedRowKeys,
+              cellInfo,
+              templateData.component
+            )
+          "
+        >
+          <dxi-column dataField="FullName"></dxi-column>
+          <dxi-column dataField="State"></dxi-column>
+          <dxi-column dataField="City"></dxi-column>
+          <dxo-selection mode="single"></dxo-selection>
+        </dx-data-grid>
+      </div>
+    </dx-drop-down-box>
+  </div>
+</dx-data-grid>
