@@ -3,7 +3,9 @@ import {
 } from '@angular/core';
 import DropDownBox from 'devextreme/ui/drop_down_box';
 import { DxDataGridComponent, DxPopupComponent } from 'devextreme-angular';
+import { ColumnEditCellTemplateData } from 'devextreme/ui/data_grid';
 import {
+  Employee,
   employees, states, tasks, titlesPrefix,
 } from './app.service';
 
@@ -58,7 +60,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onSelectionChanged(selectedRowKeys: any[], cellInfo: any, component: DropDownBox): void {
+  onSelectionChanged(selectedRowKeys: Employee[], cellInfo: ColumnEditCellTemplateData, component: DropDownBox): void {
     cellInfo.setValue(selectedRowKeys[0]);
     if (selectedRowKeys.length > 0) {
       component.close();
