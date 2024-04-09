@@ -32,6 +32,7 @@
           title="Search by state:"
           [shading]="false"
           id="popId"
+          [(visible)]="popupVisible"
         >
           <div *dxTemplate="let data of 'content'">
             <dx-select-box

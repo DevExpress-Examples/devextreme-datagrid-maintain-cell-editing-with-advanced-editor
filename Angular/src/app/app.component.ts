@@ -1,8 +1,7 @@
 import {
   Component, ElementRef, OnInit, ViewChild,
 } from '@angular/core';
-import DataGrid from 'devextreme/ui/data_grid';
-import Popup from 'devextreme/ui/popup';
+import DropDownBox from 'devextreme/ui/drop_down_box';
 import { DxDataGridComponent, DxPopupComponent } from 'devextreme-angular';
 import {
   employees, states, tasks, titlesPrefix,
@@ -28,6 +27,8 @@ export class AppComponent implements OnInit {
 
   states = states;
 
+  popupVisible: boolean;
+
   private readonly overlayClass = 'dx-overlay-wrapper';
 
   private readonly blockClickClass = 'dx-dropdowneditor-overlay';
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
     this.dropdownOptions = {
       width: '500px',
     };
+    this.popupVisible = false;
   }
 
   ngOnInit(): void {
@@ -56,10 +58,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onSelectionChanged(selectedRowKeys: any, cellInfo: any, component: any): void {
+  onSelectionChanged(selectedRowKeys: any[], cellInfo: any, component: DropDownBox): void {
     cellInfo.setValue(selectedRowKeys[0]);
     if (selectedRowKeys.length > 0) {
       component.close();
+      this.popupVisible = false;
     }
   }
 
@@ -68,6 +71,6 @@ export class AppComponent implements OnInit {
   }
 
   openPopup(): void {
-    this.popup?.instance.show().catch(() => {});
+    this.popupVisible = true;
   }
 }
