@@ -8,12 +8,12 @@ export const titlesPrefix = [
   'Shipping',
 ];
 
-export class Task {
-  ID!: number;
+export interface Task {
+  ID?: number;
 
-  AssigneeID!: number;
+  AssigneeID?: number;
 
-  Task!: string;
+  Task?: string;
 }
 
 export const tasks: Task[] = [
@@ -39,18 +39,18 @@ export const tasks: Task[] = [
   { ID: 20, AssigneeID: 7, Task: 'Implement error logging and monitoring' },
 ];
 
-export class Employee {
-  ID!: number;
+export interface Employee {
+  ID?: number;
 
-  FullName!: string;
+  FullName?: string;
 
-  Prefix!: string;
+  Prefix?: string;
 
-  Position!: string;
+  Position?: string;
 
-  City!: string;
+  City?: string;
 
-  State!: string;
+  State?: string;
 }
 
 export const employees: Employee[] = [
