@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
-const useOverlayObserver = (): void => {
-  const overlayClass = 'dx-overlay-wrapper';
-  const blockClickClass = 'dx-dropdowneditor-overlay';
+const overlayClass = 'dx-overlay-wrapper';
+const blockClickClass = 'dx-dropdowneditor-overlay';
 
+const useOverlayObserver = (): void => {
   useEffect(() => {
     const handleMutation = (): void => {
       const overlays = document.querySelectorAll(`.${overlayClass}`);
@@ -26,7 +26,7 @@ const useOverlayObserver = (): void => {
     return (): void => {
       observer.disconnect();
     };
-  }, [overlayClass, blockClickClass]);
+  }, []);
 };
 
 export default useOverlayObserver;
