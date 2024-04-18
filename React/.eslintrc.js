@@ -2,6 +2,9 @@ module.exports = {
   root: true,
   extends: ['devextreme/spell-check'],
   overrides: [{
+    rules:{
+      "func-style": [2, "expression", { "allowArrowFunctions": true }]
+    },
     files: ['*.ts', '*.tsx'],
     extends: ['devextreme/react'],
     env: {

@@ -1,6 +1,6 @@
 import { ReportHandler } from 'web-vitals';
 
-function reportWebVitals(onPerfEntry?: ReportHandler): void {
+const reportWebVitals = (onPerfEntry?: ReportHandler): void => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
     import('web-vitals').then(({
       getCLS, getFID, getFCP, getLCP, getTTFB,
@@ -12,6 +12,6 @@ function reportWebVitals(onPerfEntry?: ReportHandler): void {
       getTTFB(onPerfEntry);
     }).catch((error) => console.log(error)); // eslint-disable-line no-console
   }
-}
+};
 
 export default reportWebVitals;
