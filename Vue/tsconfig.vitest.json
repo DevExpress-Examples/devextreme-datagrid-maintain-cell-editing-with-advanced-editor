@@ -2,8 +2,17 @@
   "extends": "./tsconfig.app.json",
   "exclude": [],
   "compilerOptions": {
-    "composite": true,
+    "ignoreDeprecations": "5.0",
+    // "composite": true,
     "lib": [],
     "types": ["node", "jsdom"]
-  }
+  },
+  "include": [
+    "src/*.ts",
+    "src/components/*.vue"
+  ],
+  "files": [
+    "src/data.ts",
+    "src/components/*.vue"
+  ]
 }
