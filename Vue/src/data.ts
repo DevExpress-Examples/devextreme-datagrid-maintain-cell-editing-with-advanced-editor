@@ -8,7 +8,15 @@ export const titlesPrefix = [
   'Shipping',
 ];
 
-export const tasks = [
+export interface Task {
+  ID?: number;
+
+  AssigneeID?: number;
+
+  Task?: string;
+}
+
+export const tasks: Task[] = [
   { ID: 1, AssigneeID: 6, Task: 'Refactor code to improve maintainability' },
   { ID: 2, AssigneeID: 11, Task: 'Update documentation for API endpoints' },
   { ID: 3, AssigneeID: 3, Task: 'Fix UI bugs reported by QA team' },
@@ -31,7 +39,21 @@ export const tasks = [
   { ID: 20, AssigneeID: 7, Task: 'Implement error logging and monitoring' },
 ];
 
-export const employees = [
+export interface Employee {
+  ID?: number;
+
+  FullName?: string;
+
+  Prefix?: string;
+
+  Position?: string;
+
+  City?: string;
+
+  State?: string;
+}
+
+export const employees: Employee[] = [
   {
     ID: 1,
     FullName: 'John Heart',

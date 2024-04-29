@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import DxDataGrid, { type DxDataGridTypes, DxColumn, DxPaging, DxSelection, DxScrolling } from 'devextreme-vue/data-grid';
+import DxDataGrid, { type DxDataGridTypes, DxPaging, DxSelection, DxScrolling } from 'devextreme-vue/data-grid';
 import DxDropDownBox from 'devextreme-vue/drop-down-box';
 import DxSelextBox, { type DxSelectBoxTypes } from 'devextreme-vue/select-box';
 import DxPopup from 'devextreme-vue/popup';
-import DxButton, { type DxButtonTypes } from 'devextreme-vue/button';
+import DxButton from 'devextreme-vue/button';
 
-import { employees, states } from '../data';
-import type CustomStore from 'devextreme/data/custom_store';
+import { states, type Task } from '../data';
 import { ref } from 'vue';
 
 const dropdownOptions = {
@@ -16,16 +15,14 @@ const dataGridColumns = ['FullName', 'State', 'City'];
 
 const props = defineProps<{
   value: number,
-  onValueChanged(value: number): void,
-  dataSource: any[],
+  onValueChanged(value:number): void,
+  dataSource: Task[],
 }>();
 
 const currentValue = ref(props.value);
 const dropDownBoxRef = ref<DxDropDownBox | null>(null);
 const popupRef = ref<DxPopup | null>(null);
 const dataGridRefKey = ref<DxDataGrid | null>(null);
-
-let popupVisible = false;
 
 const onSelectionChanged = (e: DxDataGridTypes.SelectionChangedEvent) => {
   currentValue.value = e.selectedRowKeys[0];
@@ -41,7 +38,7 @@ const onValueChanged = (e: DxSelectBoxTypes.ValueChangedEvent): void => {
   dataGridRefKey.value?.instance?.searchByText(e.value);
 };
 
-const onClick = (e:DxButtonTypes.ClickEvent) => {
+const onClick = () => {
   popupRef.value?.instance?.show();
 };
 </script>
