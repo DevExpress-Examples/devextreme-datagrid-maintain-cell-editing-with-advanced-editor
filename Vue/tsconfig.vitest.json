@@ -3,7 +3,7 @@
   "exclude": [],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
-    // "composite": true,
+    "composite": true,
     "lib": [],
     "types": ["node", "jsdom"]
   },
@@ -11,8 +11,4 @@
     "src/*.ts",
     "src/components/*.vue"
   ],
-  "files": [
-    "src/data.ts",
-    "src/components/*.vue"
-  ]
 }
