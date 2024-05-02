@@ -1,22 +1,55 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import 'devextreme/dist/css/dx.light.css';
+import DataSource from 'devextreme/data/data_source';
+import ArrayStore from 'devextreme/data/array_store';
 
-import "devextreme/dist/css/dx.material.blue.light.compact.css";
-import DxButton from "devextreme-vue/button";
+import DxDataGrid, { DxPaging, DxEditing, DxColumn, DxLookup } from 'devextreme-vue/data-grid';
 
-const props = defineProps({
-  text: String,
+import DropDownBoxComponent from './DropDownBoxComponent.vue';
+import { tasks, employees } from '../data';
+
+const dataSource = new DataSource({
+  store: new ArrayStore({
+    data: tasks,
+    key: 'ID',
+  }),
 });
-const count = ref(0);
-const buttonText = computed<String>(
-  () => `Click ${props.text}: ${count.value}`
-);
-function clickHandler() {
-  count.value += 1;
-}
+
 </script>
 <template>
-  <div>
-    <DxButton :text="buttonText" @click="clickHandler"></DxButton>
+  <div v-overlay-observer>
+    <DxDataGrid
+      :data-source="dataSource"
+      :show-borders="true"
+    >
+      <DxPaging
+        :enabled="true"
+        :page-size="15"
+      />
+      <DxEditing
+        :allow-updating="true"
+        mode="cell"
+      />
+      <DxColumn
+        data-field="AssigneeID"
+        edit-cell-template="dropDownBoxEditor"
+      >
+        <DxLookup
+          :data-source="employees"
+          value-expr="ID"
+          display-expr="FullName"
+        />
+      </DxColumn>
+      <DxColumn
+        data-field="Task"
+      />
+      <template #dropDownBoxEditor="{ data: cellInfo }">
+        <DropDownBoxComponent
+          :value="cellInfo.value"
+          :on-value-changed="cellInfo.setValue"
+          :data-source="employees"
+        />
+      </template>
+    </DxDataGrid>
   </div>
 </template>
