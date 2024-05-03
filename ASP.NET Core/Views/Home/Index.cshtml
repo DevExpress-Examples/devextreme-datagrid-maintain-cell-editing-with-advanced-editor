@@ -1,29 +1,120 @@
 @using ASP_NET_Core.Models
 
-<h2>Home</h2>
+<script>
+    const OVERLAY_CLASS = 'dx-overlay-wrapper';
+    const BLOCK_CLICK_CLASS = 'dx-dropdowneditor-overlay';
 
-@(Html.DevExtreme().DataGrid<SampleOrder>()
+    const $rootContainer = $('.dx-viewport')[0];
+    const observer = new MutationObserver(() => {
+        $(`.${OVERLAY_CLASS}`).addClass(BLOCK_CLICK_CLASS);
+    });
+
+    observer.observe($rootContainer, {
+        attributes: false,
+        childList: true,
+        subtree: false,
+    });
+</script>
+
+@(
+Html.DevExtreme().DataGrid<ASP.NET_Core.Models.Task>()
     .ShowBorders(true)
-    .DataSource(d => d.Mvc().Controller("SampleData").LoadAction("Get").Key("OrderID"))
-    .Columns(columns => {
-        columns.AddFor(m => m.OrderID);
-        columns.AddFor(m => m.OrderDate);
-        columns.AddFor(m => m.CustomerName);
-        columns.AddFor(m => m.ShipCountry);
-        columns.AddFor(m => m.ShipCity);
+    .DataSource(d => d.Mvc().Controller("Tasks").LoadAction("Get").UpdateAction("Put").Key("ID"))
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Cell);
+        editing.AllowUpdating(true);
     })
-    .Paging(p => p.PageSize(10))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(f => f.Visible(true))
-    .GroupPanel(p => p.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
+    .Columns(columns => {
+        columns.AddFor(m => m.AssigneeID).Lookup(l =>
+        {
+            l.DataSource(d => d.Mvc().Controller("Employees").LoadAction("Get").Key("ID"));
+            l.DisplayExpr("FullName");
+            l.ValueExpr("ID");
+        })
+        .EditCellTemplate(new TemplateName("DropDownBoxTemplate"));
+        columns.AddFor(m => m.TaskDescription);
+    })
+    .Paging(p => p.PageSize(15))
     .RemoteOperations(true)
-    .Summary(s => s
-        .TotalItems(totalItems => {
-            totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
-        })
-        .GroupItems(groupItems => {
-            groupItems.Add().SummaryType(SummaryType.Count);
-        })
-    )
 )
+
+@using (Html.DevExtreme().NamedTemplate("DropDownBoxTemplate"))
+{
+    @(Html.DevExtreme().DropDownBox()
+        .DataSource(d => d.Mvc().Controller("Employees").LoadAction("Get").Key("ID"))
+        .Value(new JS("value"))
+        .ValueExpr("ID")
+        .DisplayExpr("FullName")
+        .DropDownOptions(options => options.Width(500))
+        .Option("setValue", new JS("setValue"))
+        .ContentTemplate(new TemplateName("ContentTemplate"))
+    )
+}
+
+@using (Html.DevExtreme().NamedTemplate("ContentTemplate"))
+{
+    @(Html.DevExtreme().Popup()
+        .ID("popupID")
+        .Container(".dx-viewport")
+        .Width(400)
+        .Height(200)
+        .Title("Search by state:")
+        .Shading(false)
+        .ContentTemplate(new TemplateName("popup-template"))
+)
+    @(Html.DevExtreme().Button()
+        .Text("Search")
+        .OnClick("onClick"))
+    @(Html.DevExtreme().DataGrid()
+        .ID("datagridID")
+        .DataSource(d => d.Mvc().Controller("Employees").LoadAction("Get").Key("ID"))
+        .RemoteOperations(true)
+        .Height(250)
+        .Columns(c =>
+        {
+            c.Add().DataField("FullName");
+            c.Add().DataField("State");
+            c.Add().DataField("City");
+        })
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .HoverStateEnabled(true)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS("[component.option('value')]"))
+        .FocusedRowEnabled(true)
+        .FocusedRowKey(new JS("component.option('value')"))
+        .OnSelectionChanged("function(selectionChangedArgs) { onSelectionChanged(selectionChangedArgs, component) }")
+    )
+}
+
+@using (Html.DevExtreme().NamedTemplate("popup-template"))
+{
+    @(Html.DevExtreme().SelectBox()
+        .DataSource(d => d.Mvc().Controller("States").LoadAction("Get").Key("Name"))
+        .DisplayExpr("Name")
+        .SearchEnabled(true)
+        .ShowClearButton(true)
+        .OnValueChanged("onValueChanged")
+    )
+}
+
+<script>
+    function onClick(){
+        $("#popupID").dxPopup('instance').show();
+    }
+
+    function onValueChanged(e) {
+        $("#datagridID").dxDataGrid('instance').searchByText(e.value.Name);
+    }
+
+    function onSelectionChanged(selectionChangedArgs, component) {
+        var setValue = component.option('setValue');
+        var selectedRowKey = selectionChangedArgs.selectedRowKeys[0];
+
+        component.option('value', selectedRowKey);
+        setValue(selectedRowKey);
+        if (selectionChangedArgs.selectedRowKeys.length > 0) {
+            component.close();
+        }
+    }
+</script>
