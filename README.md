@@ -3,17 +3,30 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1222435)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-# DevExtreme Examples Template
+# DataGrid for DevExtreme - How to prevent closing of a cell editor when a custom popup is clicked
 
-This is the repository template for creating new examples. 
+This is the an example how to prevent closing of a cell editor when a custom popup is clicked.
 
-Use **_Product_ for DevExtreme - _Task_** template for a title. 
+![](./screencast.gif)
 
-Describe the solved task in this section.
+The idea is to add a MutationObserver "dx-dropdowneditor-overlay" CSS class to all overlays to prevent switching off the cell editor during overlay interactions.
 
-Put a screenshot/gif that illustrates the result here.
+```javascript
+    const OVERLAY_CLASS = 'dx-overlay-wrapper';
+    const BLOCK_CLICK_CLASS = 'dx-dropdowneditor-overlay';
 
-Then, add implementation details (steps, code snippets, and other technical information in a free form), or add a link to an existing document with implementation details. 
+    const $rootContainer = $('.dx-viewport')[0];
+    const observer = new MutationObserver(() => {
+    $(`.${OVERLAY_CLASS}`).addClass(BLOCK_CLICK_CLASS);
+    });
+
+    observer.observe($rootContainer, {
+    attributes: false,
+    childList: true,
+    subtree: false,
+    });
+```
+
 
 ## Files to Review
 
@@ -24,19 +37,17 @@ Then, add implementation details (steps, code snippets, and other technical info
     - [app.component.ts](Angular/src/app/app.component.ts)
 - **Vue**
     - [Home.vue](Vue/src/components/HomeContent.vue)
+    - [DropDownBoxComponent.vue](Vue/src/components/DropDownBoxComponent.vue)
 - **React**
     - [App.tsx](React/src/App.tsx)
+    - [DropDownBoxComponent.tsx](React/src/DropDownBoxComponent.tsx)
 - **NetCore**    
     - [Index.cshtml](ASP.NET%20Core/Views/Home/Index.cshtml)
 
 ## Documentation
 
-- link
-- link
-- ...
+- [DataGrid: How to Customize Editors](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/DataGrid/Editing/#Customize_Editors)
 
 ## More Examples
 
-- link
-- link
-- ...
+- [DataGrid Demo: Custom Editors](https://js.devexpress.com/jQuery/Demos/WidgetsGallery/Demo/DataGrid/CustomEditors/MaterialBlueLight/)
