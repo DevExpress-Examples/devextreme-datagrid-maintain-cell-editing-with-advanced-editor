@@ -6,7 +6,9 @@
 
 Normally, you can click outside the DataGrid component to interrupt a cell editing. If you use another (child) DataGrid to edit cells, the following issue may occur.
 
-If you open an overlay component (for example, columnChooser) inside the child DataGrid and click it, the parent DataGrid thinks that the click occurred outside of its area, and the cell editing is closed. To prevent this issue, [monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with a `dx-dropdowneditor-overlay` CSS class to prevent the parent DataGrid from mistaking the click as outside and closing edit mode.
+Overlay components (for example, columnChooser) insert their DOM in the root of the DOM tree, not inside the DOM of their parent components. If you open an overlay component inside the child DataGrid, this component's DOM will be outside the child DataGrid DOM. Therefore, if you click the overlay, the parent DataGrid will handle this click as a click outside of its area, and the cell editing is closed. 
+
+To prevent this issue, [monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with a `dx-dropdowneditor-overlay` CSS class to prevent the parent DataGrid from mistaking the click as outside and closing edit mode.
 
 ![DataGrid with Overlays Working as Expected](./screencast.gif)
 
