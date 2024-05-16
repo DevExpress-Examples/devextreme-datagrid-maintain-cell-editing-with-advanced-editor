@@ -2,30 +2,13 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1222435)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-# DataGrid for DevExtreme - How to prevent closing of a cell editor when a custom popup is clicked
+# DataGrid for DevExtreme - How to prevent edit mode from closing when another DataGrid is used to edit cells
 
-This is the an example how to prevent closing of a cell editor when a custom popup is clicked.
+Normally, you can click outside the DataGrid component to interrupt a cell editing. If you use another (child) DataGrid to edit cells, the following issue may occur.
 
-![](./screencast.gif)
+If you open an overlay component (for example, columnChooser) inside the child DataGrid and click it, the parent DataGrid thinks that the click occurred outside of its area, and the cell editing is closed. To prevent this issue, [monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with a `dx-dropdowneditor-overlay` CSS class to prevent the parent DataGrid from mistaking the click as outside and closing edit mode.
 
-The idea is to add a MutationObserver "dx-dropdowneditor-overlay" CSS class to all overlays to prevent switching off the cell editor during overlay interactions.
-
-```javascript
-    const OVERLAY_CLASS = 'dx-overlay-wrapper';
-    const BLOCK_CLICK_CLASS = 'dx-dropdowneditor-overlay';
-
-    const $rootContainer = $('.dx-viewport')[0];
-    const observer = new MutationObserver(() => {
-    $(`.${OVERLAY_CLASS}`).addClass(BLOCK_CLICK_CLASS);
-    });
-
-    observer.observe($rootContainer, {
-    attributes: false,
-    childList: true,
-    subtree: false,
-    });
-```
-
+![DataGrid with Overlays Working as Expected](./screencast.gif)
 
 ## Files to Review
 
