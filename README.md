@@ -2,15 +2,15 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1222435)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-# DataGrid for DevExtreme - How to prevent edit mode from closing when another DataGrid is used to edit cells
+# DataGrid for DevExtreme - How to keep Edit Mode active when a user interacts with an advanced editor control
 
-Normally, you can click outside the DataGrid component to interrupt a cell editing. If you use another (child) DataGrid to edit cells, the following issue may occur.
+DevExpress DataGrid allows you to use advanced components as cell editors. For example, you can select a cell value from a list displayed within another DataGrid.
 
-Overlay components (for example, columnChooser) insert their DOM in the root of the DOM tree, not inside the DOM of their parent components. If you open an overlay component inside the child DataGrid, this component's DOM will be outside the child DataGrid DOM. Therefore, if you click the overlay, the parent DataGrid will handle this click as a click outside of its area, and the cell editing is closed. 
+![DataGrid with another DataGrid as an editor control](./screencast.gif)
 
-To prevent this issue, [monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with a `dx-dropdowneditor-overlay` CSS class to prevent the parent DataGrid from mistaking the click as outside and closing edit mode.
+As you see, embedded controls may display overlays, such as column choosers or filter dialogs. These pop-up dialogs insert their code into the root of the DOM tree, not inside the DOM of their parent components. When a user clicks on such an overlay element, the DataGrid assumes that the interaction took place outside of the component. As a result, it cancels Edit Mode. This behavior disrupts the user experience that you planned when you used an advanced control as an embedded editor.
 
-![DataGrid with Overlays Working as Expected](./screencast.gif)
+You can keep Edit Mode active even if a user interacts with an embedded control’s overlay. [Monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with the following CSS class: `dx-dropdowneditor-overlay`. The DataGrid then treats this element as part of the component UI and keeps Edit Mode active.
 
 ## Files to Review
 
