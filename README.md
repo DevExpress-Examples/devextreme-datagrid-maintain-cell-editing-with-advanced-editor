@@ -8,7 +8,7 @@ DevExpress DataGrid allows you to use advanced components as cell editors. For e
 
 ![DataGrid with another DataGrid as an editor control](./screencast.gif)
 
-As you see, embedded controls may display overlays, such as column choosers or filter dialogs. These pop-up dialogs insert their code into the root of the DOM tree, not inside the DOM of their parent components. When a user clicks on such an overlay element, the DataGrid assumes that the interaction took place outside of the component. As a result, it cancels Edit Mode. This behavior disrupts the user experience that you planned when you used an advanced control as an embedded editor.
+Embedded controls can display overlays, such as column choosers or filter dialogs. These pop-up dialogs insert their code into the root of the DOM tree, not inside the DOM of their parent components. When a user clicks on such an overlay element, the DataGrid assumes that the interaction occurred outside the component. As a result, it cancels Edit Mode. This behavior disrupts the intended user experience using an advanced control as an embedded editor.
 
 You can keep Edit Mode active even if a user interacts with an embedded control’s overlay. [Monitor the DOM](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for new elements. If an overlay appears, mark it with the following CSS class: `dx-dropdowneditor-overlay`. The DataGrid then treats this element as part of the component UI and keeps Edit Mode active.
 
