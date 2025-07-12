@@ -3,14 +3,14 @@ import { useEffect } from 'react';
 const overlayClass = 'dx-overlay-wrapper';
 const blockClickClass = 'dx-dropdowneditor-overlay';
 
-const useOverlayObserver = (): void => {
+function useOverlayObserver(): void {
   useEffect(() => {
-    const handleMutation = (): void => {
+    function handleMutation(): void {
       const overlays = document.querySelectorAll(`.${overlayClass}`);
       overlays.forEach((overlay) => {
         overlay.classList.add(blockClickClass);
       });
-    };
+    }
 
     const observer = new MutationObserver(handleMutation);
 
@@ -27,6 +27,6 @@ const useOverlayObserver = (): void => {
       observer.disconnect();
     };
   }, []);
-};
+}
 
 export default useOverlayObserver;

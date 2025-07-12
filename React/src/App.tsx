@@ -18,7 +18,7 @@ const dataSource = new DataSource({
   }),
 });
 
-const App = (): JSX.Element => {
+function App(): JSX.Element {
   useOverlayObserver();
 
   return (
@@ -46,6 +46,6 @@ const App = (): JSX.Element => {
       </DataGrid>
     </React.Fragment>
   );
-};
+}
 
 export default App;

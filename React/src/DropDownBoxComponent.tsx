@@ -5,8 +5,9 @@ import {
   DataGrid, DropDownBox, Popup, SelectBox,
 } from 'devextreme-react';
 // import { ColumnEditCellTemplateData } from 'devextreme/ui/data_grid';
-import { DataGridTypes, Selection } from 'devextreme-react/data-grid';
-import { SelectBoxTypes } from 'devextreme-react/select-box';
+import { type DataGridTypes, type DataGridRef, Selection } from 'devextreme-react/data-grid';
+import { type SelectBoxTypes } from 'devextreme-react/select-box';
+import { type DropDownBoxRef } from 'devextreme-react/drop-down-box';
 // import { ValueChangedEvent } from 'devextreme/ui/select_box';
 import { employees, states } from './data';
 
@@ -15,27 +16,27 @@ const dropdownOptions = {
 };
 const dataGridColumns = ['FullName', 'State', 'City'];
 
-const DropDownBoxComponent = (props: DataGridTypes.ColumnEditCellTemplateData): JSX.Element => {
-  const dropDownBoxRef = useRef<DropDownBox>(null);
+function DropDownBoxComponent(props: DataGridTypes.ColumnEditCellTemplateData): JSX.Element {
+  const dropDownBoxRef = useRef<DropDownBoxRef>(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([props.data.value]);
-  const dataGridRef = useRef<DataGrid>(null);
+  const dataGridRef = useRef<DataGridRef>(null);
 
   const contentRender = useCallback(() => {
-    const onSelectionChanged = (args: DataGridTypes.SelectionChangedEvent): void => {
+    const onSelectionChanged = useCallback((args: DataGridTypes.SelectionChangedEvent): void => {
       setSelectedRowKeys(args.selectedRowKeys);
-      dropDownBoxRef.current?.instance.close();
+      dropDownBoxRef.current?.instance().close();
       setPopupVisible(false);
       props.data.setValue(args.selectedRowKeys[0]);
-    };
+    }, []);
 
-    const onValueChanged = (e: SelectBoxTypes.ValueChangedEvent): void => {
-      dataGridRef.current?.instance.searchByText(e.value);
-    };
+    const onValueChanged = useCallback((e: SelectBoxTypes.ValueChangedEvent): void => {
+      dataGridRef.current?.instance().searchByText(e.value);
+    }, []);
 
-    const onClick = (): void => {
+    const onClick = useCallback((): void => {
       setPopupVisible(true);
-    };
+    }, []);
 
     return (
       <React.Fragment>
@@ -84,6 +85,6 @@ const DropDownBoxComponent = (props: DataGridTypes.ColumnEditCellTemplateData): 
       />
     </React.Fragment>
   );
-};
+}
 
 export default DropDownBoxComponent;
