@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DxDataGrid, { type DxDataGridTypes, DxPaging, DxSelection, DxScrolling } from 'devextreme-vue/data-grid';
 import DxDropDownBox from 'devextreme-vue/drop-down-box';
-import DxSelextBox, { type DxSelectBoxTypes } from 'devextreme-vue/select-box';
+import DxSelectBox, { type DxSelectBoxTypes } from 'devextreme-vue/select-box';
 import DxPopup from 'devextreme-vue/popup';
 import DxButton from 'devextreme-vue/button';
 
@@ -35,7 +35,7 @@ const onSelectionChanged = (e: DxDataGridTypes.SelectionChangedEvent) => {
   }
 };
 
-const onValueChanged = (e: DxSelectBoxTypes.ValueChangedEvent): void => {
+const onSelectBoxValueChanged = (e: DxSelectBoxTypes.ValueChangedEvent): void => {
   dataGridRefKey.value?.instance?.searchByText(e.value);
 };
 
@@ -66,11 +66,11 @@ const onClick = () => {
         container=".dx-viewport"
       >
         <div>
-          <DxSelextBox
+          <DxSelectBox
             :items="states"
             :search-enabled="true"
             :show-clear-button="true"
-            @value-changed="onValueChanged"
+            @value-changed="onSelectBoxValueChanged"
           />
         </div>
       </DxPopup>
