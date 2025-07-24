@@ -29,7 +29,21 @@ namespace ASP.NET_Core.Controllers
                 var propInfo = employee.GetType().GetProperty(property.Key);
                 if (propInfo != null && propInfo.CanWrite)
                 {
-                    propInfo.SetValue(employee, property.Value);
+                    object value = property.Value;
+
+                    if (value is JsonElement jsonElement)
+                    {
+                        if (propInfo.PropertyType == typeof(int))
+                        {
+                            value = jsonElement.GetInt32();
+                        }
+                        else if (propInfo.PropertyType == typeof(string))
+                        {
+                            value = jsonElement.GetString();
+                        }
+                    }
+
+                    propInfo.SetValue(employee, value);
                 }
             }
 
