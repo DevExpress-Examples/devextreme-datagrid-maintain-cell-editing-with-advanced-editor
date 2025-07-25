@@ -2,21 +2,48 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+   
+    <!-- Update if needed -->
   </PropertyGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+
+    <!-- Run npm install and capture output -->
+    <Exec WorkingDirectory="$(SpaRoot)"
+          Command="npm install &gt; npm-install.log 2&gt;&amp;1"
+          IgnoreExitCode="false">
+      <Output TaskParameter="ExitCode" PropertyName="NpmExitCode" />
+    </Exec>
+
+    <!-- Read and display the npm log -->
+    <ReadLinesFromFile File="$(SpaRoot)npm-install.log">
+      <Output TaskParameter="Lines" ItemName="NpmInstallOutput" />
+    </ReadLinesFromFile>
+
+    <Message Importance="high" Text="npm install output:" />
+    <Message Importance="high" Text="%(NpmInstallOutput.Identity)" />
+
+    <!-- Fail the build if npm failed -->
+    <Error Condition="'$(NpmExitCode)' != '0'" Text="npm install failed with exit code $(NpmExitCode)" />
   </Target>
+
   <Target Name="RunGulp" BeforeTargets="BeforeBuild" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SpaRoot)node_modules') ">
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp add-resources" ContinueOnError="false">
-         <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
   </Target>
+
+  <Target Name="CleanNpmLog" AfterTargets="Build">
+    <Delete Files="$(SpaRoot)npm-install.log" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="DevExtreme.AspNet.Data" Version="5.*" />
     <PackageReference Include="DevExtreme.AspNet.Core" Version="25.1.3" />
