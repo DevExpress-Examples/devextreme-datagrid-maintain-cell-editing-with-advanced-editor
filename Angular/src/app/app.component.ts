@@ -1,5 +1,6 @@
 import {
   Component, ElementRef, OnInit, ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import DropDownBox from 'devextreme/ui/drop_down_box';
 import { DxDataGridComponent, DxPopupComponent } from 'devextreme-angular';
@@ -13,6 +14,7 @@ import {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AppComponent implements OnInit {
